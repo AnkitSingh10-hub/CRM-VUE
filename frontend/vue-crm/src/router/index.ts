@@ -3,6 +3,7 @@ import DashboardView from '@/views/DashboardView.vue'
 import ProductView from '@/views/ProductView.vue'
 import OrderFormView from '@/views/OrderFormView.vue'
 import DeleteFormView from '@/views/DeleteFormView.vue'
+import OrderFormUpdateView from '@/views/OrderFormUpdateView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import RegisterView from '@/views/RegisterView.vue'
@@ -29,6 +30,11 @@ const router = createRouter({
       path: '/orderform',
       name: 'orderform',
       component: OrderFormView
+    },
+    {
+      path: '/orderupdate/:id',
+      name: 'orderupdate',
+      component: OrderFormUpdateView
     },
     {
       path: '/deleteform',

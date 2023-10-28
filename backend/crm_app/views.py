@@ -49,9 +49,7 @@ class ProductAPI(APIView):
         return Response(product_serializer.data)
 
 
-class OrderListView(
-    mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView
-):
+class OrderListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
@@ -105,6 +103,22 @@ class OrderListView(
         data["product"] = product.id
 
         return self.create(request)
+ 
+
+class OrderDetailView(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                       mixins.DestroyModelMixin):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk)
+
 
 
 class Register(APIView):

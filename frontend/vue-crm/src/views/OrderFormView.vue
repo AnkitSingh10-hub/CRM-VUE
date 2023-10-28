@@ -1,10 +1,4 @@
 <template>
-	<!-- {% extends 'accounts/main_template.html' %}
-	{% load static %}
-	{% block content %}
-	{% load widget_tweaks %} -->
-
-
 	<div class="row">
 		<div class="col-md-6">
 			<div class="card card-body">
@@ -13,11 +7,7 @@
 				<div v-if="successMsG" class="alert alert-info" role="alert">
 					{{ successMsG }}
 				</div>
-				<!-- {% if action == 'create' %}
-				<h3>Create Order</h3>
-				{% elif action == 'update' %}
-				<h3>Update Order</h3>
-				{% endif %} -->
+
 
 			</div>
 		</div>
@@ -27,17 +17,29 @@
 		<div class="col-md-6">
 			<div class="card card-body">
 				<form @submit.prevent="submit">
-					<select v-model="dataToSend.customer_name" class="form-select" aria-label="Default select example">
+					<label for="options">Customer</label>
+
+					<select id="options" v-model="dataToSend.customer_name" class="form-select" aria-label="Default select example">
+					    <option value="" disabled selected>Choose a customer</option>
+
 						<option v-for="customer in customers" :key="customer.id">{{ customer.name }}</option>
 
 					</select>
 					<hr>
-					<select v-model="dataToSend.product_name" class="form-select" aria-label="Default select example">
+					<label for="options1">Product</label>
+
+					<select id="options1" v-model="dataToSend.product_name" class="form-select" aria-label="Default select example">
+						<option value="" disabled selected>Choose a Product</option>
+
 						<option v-for="product in products" :key="product.id">{{ product.name }}</option>
 
 					</select>
 					<hr>
-					<select v-model="dataToSend.status" class="form-select" aria-label="Default select example">
+					<label for="options2">Status</label>
+
+					<select id="options2" v-model="dataToSend.status" class="form-select" aria-label="Default select example">
+						<option value="" disabled selected>Choose a Status</option>
+
 						<option v-for="st in statuses" :key="st.status">{{ st.status }}</option>
 
 					</select>
@@ -62,10 +64,13 @@ export default defineComponent({
 		let statuses = ref<Status[]>([])
 		var successMsG = ref<string>('')
 		const dataToSend = reactive({
-			status: 'Enter a data',
+			status: '',
 			customer_name: '',
 			product_name: ''
 		})
+		const x = ref<string>('Select a Customer')
+		const y = ref<string>('Select a Product')
+		const z = ref<string>('Select a Status')
 		onMounted(() => {
 			fetch('http://127.0.0.1:8000/orders', {
 				method: 'GET',
@@ -115,7 +120,7 @@ export default defineComponent({
 
 		}
 
-		return { customers, products, statuses, submit, dataToSend, successMsG }
+		return { customers, products, statuses, submit, dataToSend, successMsG, x, y, z }
 	}
 })
 </script>

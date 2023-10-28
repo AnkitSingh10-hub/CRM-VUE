@@ -71,7 +71,7 @@
 			<h5>LAST 5 ORDERS</h5>
 			<hr>
 			<div class="card card-body">
-				<a class="btn btn-primary  btn-sm btn-block" href="">Create Order</a>
+				<router-link :to="{ name: 'orderform' }" class="btn btn-primary  btn-sm btn-block">Create Order</router-link>
 				<br>
 				<table class="table table-sm">
 					<tr>
@@ -86,7 +86,8 @@
 						<td>{{ order.product_name }}</td>
 						<td>{{ order.date_created }}</td>
 						<td>{{ order.status }}</td>
-						<td><a class="btn btn-warning btn-sm">Update</a></td>
+						<td><router-link v-bind:to="{ name: 'orderupdate', params: { id: order.id } }"
+								class="btn btn-warning btn-sm">Update</router-link></td>
 						<td><a class="btn btn-danger btn-sm">Delete</a></td>
 					</tr>
 
