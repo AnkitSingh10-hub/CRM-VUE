@@ -38,3 +38,6 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('id', 'date_created', 'status', 'customer_name', 'product_name','customer','product',)
+
+class OrderStatusSerializer(serializers.Serializer):
+    status = serializers.CharField()

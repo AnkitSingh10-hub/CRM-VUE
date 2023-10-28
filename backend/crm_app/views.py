@@ -11,6 +11,7 @@ from .serializers import (
     CustomerSerializer,
     CustomUserSerializer,
     ProductSerializer,
+    OrderStatusSerializer,
 )
 import jwt, datetime
 from rest_framework import mixins, generics
@@ -47,38 +48,64 @@ class ProductAPI(APIView):
         product_serializer = ProductSerializer(products, many=True)
         return Response(product_serializer.data)
 
-class OrderListView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+
+class OrderListView(
+    mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView
+):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
     def get(self, request):
-        return self.list(request)
+        # Get the list of orders
+        orders = self.list(request).data
+
+        # Get the list of customers
+        customers = Customer.objects.all()
+        customers_serializer = CustomerSerializer(customers, many=True)
+        customers_data = customers_serializer.data
+
+        # Get the list of products
+        products = Product.objects.all()
+        print(products)
+        products_serializer = ProductSerializer(products, many=True)
+        products_data = products_serializer.data
+
+        statuses = Order.objects.exclude(status__isnull=True).values_list('status', flat=True).distinct()
+       
+        status_objects = [{'status': status} for status in statuses]
+
+        # Serialize the data
+        status_serializer = OrderStatusSerializer(status_objects, many=True)
+
+        
+        # Combine the data and return the response
+        response_data = {
+            "orders": orders,
+            "customers": customers_data,
+            "products": products_data,
+            "status": status_serializer.data
+            
+        }
+
+        return Response(response_data)
 
     def post(self, request):
         # Get the data from the request
         data = request.data
 
         # Look up the customer and product based on the provided names
-        customer_name = data.get('customer_name')
-        product_name = data.get('product_name')
+        customer_name = data.get("customer_name")
+        product_name = data.get("product_name")
 
         customer = get_object_or_404(Customer, name=customer_name)
         product = get_object_or_404(Product, name=product_name)
 
         # Add the customer and product to the data before creating the order
-        data['customer'] = customer.id
-        data['product'] = product.id
+        data["customer"] = customer.id
+        data["product"] = product.id
 
         return self.create(request)
 
-
-
-
-
-
-        
-        
-       
 
 class Register(APIView):
     def post(self, request):
